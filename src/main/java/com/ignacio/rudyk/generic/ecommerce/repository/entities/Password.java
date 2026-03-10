@@ -19,6 +19,11 @@ public class Password {
     public Password() {
     }
 
+    public Password(String passwordEncripted, String salt) {
+        this.passwordEncripted = passwordEncripted;
+        this.salt = salt;
+    }
+
     public Long getId() {
         return id;
     }

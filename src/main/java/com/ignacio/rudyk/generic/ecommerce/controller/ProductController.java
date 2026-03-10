@@ -1,8 +1,7 @@
 package com.ignacio.rudyk.generic.ecommerce.controller;
 
-import com.ignacio.rudyk.generic.ecommerce.repository.dto.ProductRequestDTO;
-import com.ignacio.rudyk.generic.ecommerce.repository.dto.response.ResponseDTO;
-import com.ignacio.rudyk.generic.ecommerce.util.HttpUtil;
+import com.ignacio.rudyk.generic.ecommerce.dto.ProductRequestDTO;
+import com.ignacio.rudyk.generic.ecommerce.dto.response.ResponseDTO;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

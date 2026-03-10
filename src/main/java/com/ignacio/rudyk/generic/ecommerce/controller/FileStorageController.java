@@ -1,6 +1,6 @@
 package com.ignacio.rudyk.generic.ecommerce.controller;
 
-import com.ignacio.rudyk.generic.ecommerce.repository.dto.response.ResponseDTO;
+import com.ignacio.rudyk.generic.ecommerce.dto.response.ResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

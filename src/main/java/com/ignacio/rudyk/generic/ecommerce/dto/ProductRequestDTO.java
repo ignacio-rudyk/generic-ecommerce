@@ -1,4 +1,4 @@
-package com.ignacio.rudyk.generic.ecommerce.repository.dto;
+package com.ignacio.rudyk.generic.ecommerce.dto;
 
 import java.math.BigDecimal;
 

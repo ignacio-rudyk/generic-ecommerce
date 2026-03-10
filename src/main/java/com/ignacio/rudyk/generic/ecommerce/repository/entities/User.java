@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -16,7 +16,6 @@ public class User {
     @JoinColumn(name = "password_id")
     private Password password;
 
-    //TODO crear la entidad Role
     @Column(name = "role_id")
     private Long roleId;
 

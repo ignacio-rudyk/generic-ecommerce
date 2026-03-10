@@ -1,7 +1,7 @@
 package com.ignacio.rudyk.generic.ecommerce.controller;
 
-import com.ignacio.rudyk.generic.ecommerce.repository.dto.NewUserDTO;
-import com.ignacio.rudyk.generic.ecommerce.repository.dto.response.ResponseDTO;
+import com.ignacio.rudyk.generic.ecommerce.dto.NewUserDTO;
+import com.ignacio.rudyk.generic.ecommerce.dto.response.ResponseDTO;
 import com.ignacio.rudyk.generic.ecommerce.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
