@@ -16,8 +16,12 @@ public class EcommerceException extends RuntimeException {
         this.httpStatus = httpStatus;
     }
 
+    public EcommerceException(String message, int code) {
+        this(message, code, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     public EcommerceException(String message) {
-        this(message, 1, HttpStatus.INTERNAL_SERVER_ERROR);
+        this(message, 1);
     }
 
     public EcommerceException() {

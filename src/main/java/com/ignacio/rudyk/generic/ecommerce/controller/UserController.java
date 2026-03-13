@@ -29,21 +29,19 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<ResponseDTO> getUser() {
-        return ResponseEntity.ok(new ResponseDTO());
+    private ResponseEntity<ResponseDTO> getUser(@PathVariable Long id, HttpServletRequest httpRequest) {
+        return HttpUtil.isSucceful2xxResponse(httpRequest, userService.findById(id));
     }
 
-    /**
-     * Reemplaza/actualiza un usuario que ya existe
-     * **/
-    @PutMapping("/{id}")
-    private ResponseEntity<ResponseDTO> updateUser(){
-        return ResponseEntity.ok(new ResponseDTO());
+    @PutMapping("/update-user")
+    private ResponseEntity<ResponseDTO> updateUser(@RequestBody NewUserDTO newUser, HttpServletRequest httpRequest) {
+        userService.updateUser(newUser);
+        return HttpUtil.isSucceful2xxResponse(httpRequest, null);
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity<ResponseDTO> deleteUser(){
-        return ResponseEntity.ok(new ResponseDTO());
+    private ResponseEntity<ResponseDTO> deleteUser(@PathVariable Long id, HttpServletRequest httpRequest) {
+        return HttpUtil.isSucceful2xxResponse(httpRequest, null);
     }
 
 }
