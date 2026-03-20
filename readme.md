@@ -119,16 +119,24 @@ La aplicación levanta en `http://localhost:8080`.
 
 ---
 
-## 🔁 Endpoints disponibles
+## 🔁 API Rest
 
-### Usuario
+### API User
 
-| Método | Endpoint | Descripción                  |
-|--------|----------|------------------------------|
+| Método | Endpoint            | Descripción                  |
+|--------|---------------------|------------------------------|
 | POST | `/user/create-user` | Crear un nuevo usuario       |
-| GET | `/user/{id}` | Obtener un usuario por ID    |
-| PUT | `/user/{id}` | Actualizar un usuario por ID |
-| DELETE | `/user/{id}` | Eliminar un usuario por ID   |
+| GET | `/user/{id}`        | Obtener un usuario por ID    |
+| PUT | `/user/update-user` | Actualizar un usuario por ID |
+| DELETE | `/user/{id}`        | Eliminar un usuario por ID   |
+
+### API Cart
+
+| Método | Endpoint                     | Descripción                          |
+|--------|------------------------------|--------------------------------------|
+| GET    | `/cart/{userId}`             | Obtener un carro por ID              |
+| POST   | `/cart/{cartId}/{productId}` | Agregar un producto al carro         |
+| DELETE | `/cart/{cartId}/{productId}` | Eliminar un producto del carro |
 
 ---
 
