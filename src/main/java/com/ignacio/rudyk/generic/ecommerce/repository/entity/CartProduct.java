@@ -2,8 +2,6 @@ package com.ignacio.rudyk.generic.ecommerce.repository.entity;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
-
 @Entity
 @Table(name = "cart_product")
 public class CartProduct {
@@ -12,19 +10,20 @@ public class CartProduct {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
+    @Column(name = "cart_id")
+    private Long cartId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
-
-    @Column(name = "created_at")
-    private LocalDate createdAt;
+    @Column(name = "product_id")
+    private Long productId;
 
     @Column(name = "quantity")
     private Long quantity;
+
+    public CartProduct(Long cartId, Long productId, Long quantity) {
+        this.cartId = cartId;
+        this.productId = productId;
+        this.quantity = quantity;
+    }
 
     public CartProduct() {
     }
@@ -37,28 +36,20 @@ public class CartProduct {
         this.id = id;
     }
 
-    public Cart getCart() {
-        return cart;
+    public Long getCartId() {
+        return cartId;
     }
 
-    public void setCart(Cart cart) {
-        this.cart = cart;
+    public void setCartId(Long cartId) {
+        this.cartId = cartId;
     }
 
-    public Product getProduct() {
-        return product;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public LocalDate getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public Long getQuantity() {
@@ -68,4 +59,5 @@ public class CartProduct {
     public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
+
 }

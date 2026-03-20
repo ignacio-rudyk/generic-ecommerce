@@ -7,10 +7,10 @@ public interface IUserService {
 
     void createUser(NewUserDTO newUserDTO);
 
-    UserDTO findById(Long id);
+    UserDTO findById(Long userId);
 
     void updateUser(NewUserDTO newUserDTO);
 
-    void deleteUser(Long id);
+    void deleteUser(Long userId);
 
 }

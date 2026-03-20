@@ -20,14 +20,21 @@ public class Product {
     @Column(name = "short_description")
     private String shortDescription;
 
-    @Column(name = "price_id")
-    private Long priceId;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "price_id")
+    private Price price;
 
-    @Column(name = "category_id")
-    private Long categoryId;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Column(name = "file_id")
     private Long fileId;
+
+
+    /*@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_contact_id")
+    private UserContact userContact;*/
 
     public Product() {
     }
@@ -64,20 +71,20 @@ public class Product {
         this.shortDescription = shortDescription;
     }
 
-    public Long getPriceId() {
-        return priceId;
+    public Price getPrice() {
+        return price;
     }
 
-    public void setPriceId(Long priceId) {
-        this.priceId = priceId;
+    public void setPrice(Price price) {
+        this.price = price;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public Long getFileId() {

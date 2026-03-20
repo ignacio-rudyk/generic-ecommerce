@@ -4,18 +4,19 @@ import com.ignacio.rudyk.generic.ecommerce.dto.NewUserDTO;
 import com.ignacio.rudyk.generic.ecommerce.dto.UserDTO;
 import com.ignacio.rudyk.generic.ecommerce.enumerate.RoleEnum;
 import com.ignacio.rudyk.generic.ecommerce.enumerate.UserStateEnum;
+import com.ignacio.rudyk.generic.ecommerce.exception.BadRequestException;
+import com.ignacio.rudyk.generic.ecommerce.exception.DataNotFoundException;
 import com.ignacio.rudyk.generic.ecommerce.exception.EcommerceException;
-import com.ignacio.rudyk.generic.ecommerce.exception.UserNotFoundException;
 import com.ignacio.rudyk.generic.ecommerce.mapper.IUserMapper;
 import com.ignacio.rudyk.generic.ecommerce.repository.IUserRepository;
 import com.ignacio.rudyk.generic.ecommerce.repository.entity.Password;
 import com.ignacio.rudyk.generic.ecommerce.repository.entity.User;
 import com.ignacio.rudyk.generic.ecommerce.repository.entity.UserContact;
+import com.ignacio.rudyk.generic.ecommerce.service.ICartService;
 import com.ignacio.rudyk.generic.ecommerce.service.IRoleService;
 import com.ignacio.rudyk.generic.ecommerce.service.IUserService;
 import com.ignacio.rudyk.generic.ecommerce.service.IUserStateService;
 import com.ignacio.rudyk.generic.ecommerce.util.CryptographyUtil;
-import org.mapstruct.control.MappingControl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -35,11 +36,18 @@ public class UserService implements IUserService {
 
     private IUserMapper userMapper;
 
-    public UserService(IRoleService roleService, IUserStateService userStateService, IUserRepository userRepository, IUserMapper userMapper) {
+    private ICartService cartService;
+
+    public UserService(IRoleService roleService,
+                       IUserStateService userStateService,
+                       IUserRepository userRepository,
+                       IUserMapper userMapper,
+                       ICartService cartService) {
         this.roleService = roleService;
         this.userStateService = userStateService;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.cartService = cartService;
     }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
@@ -56,14 +64,15 @@ public class UserService implements IUserService {
         newUser.setCreatedAt(new Date());
         newUser.setUserState(userStateService.findByCode(UserStateEnum.ACTIVO.getCode()));
         newUser.setBithday(newUserDTO.bithday());
-        userRepository.save(newUser);
+        User user = userRepository.save(newUser);
+        cartService.createCart(user.getId());
     }
 
     @Override
-    public UserDTO findById(Long id) {
-        if(id == null)
-            return null;
-        Optional<User> opUser = userRepository.findByIdWithUserContact(id);
+    public UserDTO findById(Long userId) {
+        if(userId == null)
+            throw new BadRequestException("El ID es null");
+        Optional<User> opUser = userRepository.findByIdWithUserContact(userId);
         return opUser.map(value -> userMapper.toDTO(value)).orElse(null);
     }
 
@@ -71,10 +80,10 @@ public class UserService implements IUserService {
     @Transactional
     public void updateUser(NewUserDTO newUserDTO) {
         if(newUserDTO.id() == null)
-            throw new UserNotFoundException();
+            throw new BadRequestException("El ID es null");
         Optional<User> opUser = userRepository.findById(newUserDTO.id());
         if(opUser.isEmpty())
-            throw new UserNotFoundException();
+            throw new DataNotFoundException("Usuario no encontrado");
         User user = opUser.get();
         user.setFirstName(newUserDTO.firstName());
         user.setLastName(newUserDTO.lastName());
@@ -86,26 +95,30 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void deleteUser(Long id) {
-        if(id == null)
-            throw new UserNotFoundException();
-        Optional<User> opUser = userRepository.findById(id);
+    public void deleteUser(Long userId) {
+        if(userId == null)
+            throw new BadRequestException("El ID es null");
+        Optional<User> opUser = userRepository.findById(userId);
         if(opUser.isEmpty())
-            throw new UserNotFoundException();
-        this.userRepository.delete(opUser.get());
+            throw new DataNotFoundException("Usuario no encontrado");
+        userRepository.delete(opUser.get());
+        cartService.deleteCart(userId);
     }
 
 
     private Password generatePassword(String password) {
-        String salt = CryptographyUtil.generateSalt();
-        String  passwordStr;
-        try {
-            passwordStr = CryptographyUtil.encrypt(password, salt);
-        } catch (Exception e) {
-            LOGGER.error("Error al encriptar la contraseña: {}", e.getMessage(), e);
-            throw new EcommerceException("Error al generar la contraseña");
+        if(password != null) {
+            String salt = CryptographyUtil.generateSalt();
+            String  passwordStr;
+            try {
+                passwordStr = CryptographyUtil.encrypt(password, salt);
+            } catch (Exception e) {
+                LOGGER.error("Error al encriptar la contraseña: {}", e.getMessage(), e);
+                throw new EcommerceException("Error al generar la contraseña");
+            }
+            return new Password(passwordStr, salt);
         }
-        return new Password(passwordStr, salt);
+        throw new BadRequestException("La contrasena es null");
     }
 
     private UserContact generateUserContact(NewUserDTO newUserDTO) {

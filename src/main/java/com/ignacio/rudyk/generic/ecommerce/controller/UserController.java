@@ -23,26 +23,30 @@ public class UserController {
     }
 
     @PostMapping("/create-user")
-    private ResponseEntity<ResponseDTO> createUser(@RequestBody NewUserDTO newUser, HttpServletRequest httpRequest) {
+    public ResponseEntity<ResponseDTO> createUser(HttpServletRequest httpServletRequest, @RequestBody NewUserDTO newUser) {
+        LOGGER.info("Llamado al servicio /create-user - body: {}", newUser);
         userService.createUser(newUser);
-        return HttpUtil.isSucceful2xxResponse(httpRequest, null);
+        return HttpUtil.isSucceful2xxResponse(httpServletRequest, null);
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<ResponseDTO> getUser(@PathVariable Long id, HttpServletRequest httpRequest) {
-        return HttpUtil.isSucceful2xxResponse(httpRequest, userService.findById(id));
+    public ResponseEntity<ResponseDTO> getUser(HttpServletRequest httpServletRequest, @PathVariable Long id) {
+        LOGGER.info("Llamado al servicio /get-user - ID: {}", id);
+        return HttpUtil.isSucceful2xxResponse(httpServletRequest, userService.findById(id));
     }
 
     @PutMapping("/update-user")
-    private ResponseEntity<ResponseDTO> updateUser(@RequestBody NewUserDTO newUser, HttpServletRequest httpRequest) {
+    public ResponseEntity<ResponseDTO> updateUser(HttpServletRequest httpServletRequest, @RequestBody NewUserDTO newUser) {
+        LOGGER.info("Llamado al servicio /update-user - body: {}", newUser);
         userService.updateUser(newUser);
-        return HttpUtil.isSucceful2xxResponse(httpRequest, null);
+        return HttpUtil.isSucceful2xxResponse(httpServletRequest, null);
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity<ResponseDTO> deleteUser(@PathVariable Long id, HttpServletRequest httpRequest) {
+    public ResponseEntity<ResponseDTO> deleteUser(HttpServletRequest httpServletRequest, @PathVariable Long id) {
+        LOGGER.info("Llamado al servicio /delete-user - ID: {}", id);
         userService.deleteUser(id);
-        return HttpUtil.isSucceful2xxResponse(httpRequest, null);
+        return HttpUtil.isSucceful2xxResponse(httpServletRequest, null);
     }
 
 }

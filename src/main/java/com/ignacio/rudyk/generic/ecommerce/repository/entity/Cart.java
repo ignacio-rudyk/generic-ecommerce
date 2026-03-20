@@ -3,6 +3,7 @@ package com.ignacio.rudyk.generic.ecommerce.repository.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -21,6 +22,16 @@ public class Cart {
 
     @Column(name = "user_id")
     private Long userId;
+
+    @Column(name = "last_modification")
+    private Date lastModification;
+
+    public Cart(Long userId) {
+        this.totalAmount = BigDecimal.ZERO;
+        this.subTotalAmount = BigDecimal.ZERO;
+        this.userId = userId;
+        this.lastModification = null;
+    }
 
     public Cart() {
     }
@@ -55,5 +66,13 @@ public class Cart {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Date getLastModification() {
+        return lastModification;
+    }
+
+    public void setLastModification(Date lastModification) {
+        this.lastModification = lastModification;
     }
 }
