@@ -2,20 +2,47 @@ package com.ignacio.rudyk.generic.ecommerce.controller;
 
 import com.ignacio.rudyk.generic.ecommerce.dto.ProductRequestDTO;
 import com.ignacio.rudyk.generic.ecommerce.dto.response.ResponseDTO;
-import org.springframework.http.HttpRequest;
+import com.ignacio.rudyk.generic.ecommerce.service.IProductService;
+import com.ignacio.rudyk.generic.ecommerce.util.HttpUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/product")
 public class ProductController {
 
-    @PostMapping
-    public ResponseEntity<ResponseDTO> createProduct(@RequestBody ProductRequestDTO productRequest, HttpRequest httpRequest) {
-        return ResponseEntity.ok(new ResponseDTO());
+    private IProductService productService;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
+
+    @PostMapping("/create-product")
+    public ResponseEntity<ResponseDTO> createProduct(HttpServletRequest httpServletRequest, @RequestBody ProductRequestDTO newProduct) {
+        LOGGER.info("Llamado al servicio /create-product - body: {}", newProduct);
+        productService.createProduct(newProduct);
+        return HttpUtil.isSucceful2xxResponse(httpServletRequest, null);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDTO> getProduct(HttpServletRequest httpServletRequest, @PathVariable Long id) {
+        LOGGER.info("Llamado al servicio /get-product - ID: {}", id);
+        return HttpUtil.isSucceful2xxResponse(httpServletRequest, productService.findById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDTO> updateProduct(HttpServletRequest httpServletRequest, @RequestBody ProductRequestDTO updateProduct) {
+        LOGGER.info("Llamado al servicio /update-product - body: {}", updateProduct);
+        productService.updateProduct(updateProduct);
+        return HttpUtil.isSucceful2xxResponse(httpServletRequest, null);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseDTO> deleteProduct(HttpServletRequest httpServletRequest, @PathVariable Long id) {
+        LOGGER.info("Llamado al servicio /delete-product - ID: {}", id);
+        productService.deleteProduct(id);
+        return HttpUtil.isSucceful2xxResponse(httpServletRequest, null);
     }
 
 }

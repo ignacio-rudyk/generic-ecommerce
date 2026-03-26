@@ -18,6 +18,11 @@ public class Price {
     @Column(name = "cost_price")
     private BigDecimal costPrice;
 
+    public Price(BigDecimal price, BigDecimal costPrice) {
+        this.price = price;
+        this.costPrice = costPrice;
+    }
+
     public Price() {
     }
 

@@ -31,11 +31,6 @@ public class Product {
     @Column(name = "file_id")
     private Long fileId;
 
-
-    /*@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_contact_id")
-    private UserContact userContact;*/
-
     public Product() {
     }
 
