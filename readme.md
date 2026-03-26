@@ -1,6 +1,6 @@
 # 🛒 Generic Ecommerce
 
-API REST de un ecommerce desarrollada con Java y Spring Boot, orientada a demostrar buenas prácticas de desarrollo backend. Proyecto de práctica para portfolio.
+API REST de un ecommerce desarrollado con Java y Spring Boot, orientado a demostrar buenas prácticas de desarrollo backend. Proyecto de práctica para portfolio.
 
 ---
 
@@ -23,7 +23,7 @@ El proyecto sigue una arquitectura en capas:
 - **Service** — contiene la lógica de negocio y lanza excepciones personalizadas
 - **Repository** — acceso a la base de datos mediante Spring Data JPA
 - **DTO** — objetos de transferencia de datos para requests y responses
-- **Exception** — manejo centralizado de errores con `GlobalExceptionHandler`
+- **Exception** — manejo centralizado de errores con `EcommerceExceptionHandler`
 
 ---
 
@@ -35,10 +35,13 @@ src/main/java/com/ignacio/rudyk/generic/ecommerce/
 │   └── response/
 ├── enumerate/
 ├── exception/
+│   └── handler/
+├── mapper/
 ├── repository/
 │   └── entity/
-└── service/
-    └── implementation/
+├── service/
+│   └── implementation/
+└── util/
 ```
 
 ---
@@ -53,6 +56,7 @@ El proyecto incluye las siguientes entidades:
 - **UserContact** — email y teléfono del usuario
 - **Password** — contraseña encriptada con salt
 - **Product** — productos con categoría y precio
+- **File** — archivo con base64 o url.
 - **Category** — categorías de productos
 - **Cart** — carrito de compras del usuario
 - **CartProduct** — productos dentro de un carrito
@@ -137,6 +141,16 @@ La aplicación levanta en `http://localhost:8080`.
 | GET    | `/cart/{userId}`             | Obtener un carro por ID              |
 | POST   | `/cart/{cartId}/{productId}` | Agregar un producto al carro         |
 | DELETE | `/cart/{cartId}/{productId}` | Eliminar un producto del carro |
+
+### API Product
+
+| Método | Endpoint                  | Descripción               |
+|--------|---------------------------|---------------------------|
+| POST   | `/product/create-product` | Crear un nuevo producto   |
+| GET    | `/product/{id}}`          | Obtener un producto por ID |
+| PUT    | `/product/{id}`           | Actualizar los datos de un producto |
+| DELETE | `/product/{id}`           | Eliminar un producto      |
+
 
 ---
 
