@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "orders")
-public class Orders {
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class Orders {
     @Column(name = "cart_id")
     private Long cartId;
 
-    public Orders() {
+    public Order() {
     }
 
     public Long getId() {
@@ -78,4 +78,5 @@ public class Orders {
     public void setCartId(Long cartId) {
         this.cartId = cartId;
     }
+
 }
