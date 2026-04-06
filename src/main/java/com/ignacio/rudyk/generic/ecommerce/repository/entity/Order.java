@@ -2,31 +2,32 @@ package com.ignacio.rudyk.generic.ecommerce.repository.entity;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "order")
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "total_amount")
+    private BigDecimal totalAmount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_state_id")
     private OrderState orderState;
 
-    @Column(name = "url_file")
-    private String urlFile;
-
     @Column(name = "created_at")
-    private LocalDate createdAt;
+    private Date createdAt;
 
     @Column(name = "last_modification")
-    private LocalDate lastModification;
+    private Date lastModification;
 
-    @Column(name = "cart_id")
-    private Long cartId;
+    @Column(name = "user_id")
+    private Long userId;
 
     public Order() {
     }
@@ -39,6 +40,14 @@ public class Order {
         this.id = id;
     }
 
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
     public OrderState getOrderState() {
         return orderState;
     }
@@ -47,36 +56,27 @@ public class Order {
         this.orderState = orderState;
     }
 
-    public String getUrlFile() {
-        return urlFile;
-    }
-
-    public void setUrlFile(String urlFile) {
-        this.urlFile = urlFile;
-    }
-
-    public LocalDate getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDate getLastModification() {
+    public Date getLastModification() {
         return lastModification;
     }
 
-    public void setLastModification(LocalDate lastModification) {
+    public void setLastModification(Date lastModification) {
         this.lastModification = lastModification;
     }
 
-    public Long getCartId() {
-        return cartId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setCartId(Long cartId) {
-        this.cartId = cartId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
-
 }

@@ -57,7 +57,9 @@ public class ProductService implements IProductService {
         if(productId == null)
             return null;
         Optional<Product> opCart = productRepository.findById(productId);
-        return productMapper.toDTO(opCart.orElse(null));
+        if(opCart.isPresent())
+            return productMapper.toDTO(opCart.get());
+        throw new DataNotFoundException("Producto no encontrado");
     }
 
     @Override
@@ -85,11 +87,6 @@ public class ProductService implements IProductService {
         if(opProduct.isEmpty())
             throw new DataNotFoundException("Producto no encontrado");
         productRepository.delete(opProduct.get());
-    }
-
-    @Override
-    public List<Product> findProductsByCartId(Long cartId) {
-        return productRepository.findProductsByCartId(cartId);
     }
 
     private Category getCategory(Long categoryId) {

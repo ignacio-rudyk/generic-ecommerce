@@ -8,7 +8,7 @@ public interface ICartService {
 
     void deleteCart(Long cartId);
 
-    CartDTO getCart(Long userId);
+    CartDTO getCart(Long cartId);
 
     void addProduct(Long cartId, Long productId);
 

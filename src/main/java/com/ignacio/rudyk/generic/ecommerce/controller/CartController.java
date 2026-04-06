@@ -1,6 +1,5 @@
 package com.ignacio.rudyk.generic.ecommerce.controller;
 
-import com.ignacio.rudyk.generic.ecommerce.dto.CartDTO;
 import com.ignacio.rudyk.generic.ecommerce.dto.response.ResponseDTO;
 import com.ignacio.rudyk.generic.ecommerce.service.ICartService;
 import com.ignacio.rudyk.generic.ecommerce.util.HttpUtil;
@@ -22,10 +21,10 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<ResponseDTO> getCart(HttpServletRequest httpServletRequest, @PathVariable Long userId) {
-        LOGGER.info("Llamado al servicio /get-cart - id: {}", userId);
-        return HttpUtil.isSucceful2xxResponse(httpServletRequest, cartService.getCart(userId));
+    @GetMapping("/{cartId}")
+    public ResponseEntity<ResponseDTO> getCart(HttpServletRequest httpServletRequest, @PathVariable Long cartId) {
+        LOGGER.info("Llamado al servicio /get-cart - ID: {}", cartId);
+        return HttpUtil.isSucceful2xxResponse(httpServletRequest, cartService.getCart(cartId));
     }
 
     @PostMapping("/{cartId}/{productId}")

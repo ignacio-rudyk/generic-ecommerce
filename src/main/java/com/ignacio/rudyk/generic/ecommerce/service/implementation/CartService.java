@@ -1,15 +1,19 @@
 package com.ignacio.rudyk.generic.ecommerce.service.implementation;
 
 import com.ignacio.rudyk.generic.ecommerce.dto.CartDTO;
+import com.ignacio.rudyk.generic.ecommerce.dto.CartProdutcDTO;
 import com.ignacio.rudyk.generic.ecommerce.dto.ProductDTO;
 import com.ignacio.rudyk.generic.ecommerce.exception.BadRequestException;
 import com.ignacio.rudyk.generic.ecommerce.exception.DataNotFoundException;
 import com.ignacio.rudyk.generic.ecommerce.mapper.ICartMapper;
+import com.ignacio.rudyk.generic.ecommerce.mapper.ICartProductMapper;
 import com.ignacio.rudyk.generic.ecommerce.mapper.IProductMapper;
 import com.ignacio.rudyk.generic.ecommerce.repository.ICartProductRepository;
 import com.ignacio.rudyk.generic.ecommerce.repository.ICartRepository;
+import com.ignacio.rudyk.generic.ecommerce.repository.IProductRepository;
 import com.ignacio.rudyk.generic.ecommerce.repository.entity.Cart;
 import com.ignacio.rudyk.generic.ecommerce.repository.entity.CartProduct;
+import com.ignacio.rudyk.generic.ecommerce.repository.entity.Product;
 import com.ignacio.rudyk.generic.ecommerce.service.ICartService;
 import com.ignacio.rudyk.generic.ecommerce.service.IProductService;
 import org.springframework.stereotype.Service;
@@ -21,26 +25,26 @@ import java.util.Optional;
 @Service
 public class CartService implements ICartService {
 
-    private IProductService productService;
-
     private ICartRepository cartRepository;
+
+    private IProductRepository productRepository;
 
     private ICartProductRepository cartProductRepository;
 
     private ICartMapper cartMapper;
 
-    private IProductMapper productMapper;
+    private ICartProductMapper cartProductMapper;
 
-    public CartService(IProductService productService,
-                       ICartRepository cartRepository,
+    public CartService(ICartRepository cartRepository,
+                       IProductRepository productRepository,
                        ICartProductRepository cartProductRepository,
                        ICartMapper cartMapper,
-                       IProductMapper productMapper) {
-        this.productService = productService;
+                       ICartProductMapper cartProductMapper) {
         this.cartRepository = cartRepository;
+        this.productRepository = productRepository;
         this.cartProductRepository = cartProductRepository;
         this.cartMapper = cartMapper;
-        this.productMapper = productMapper;
+        this.cartProductMapper = cartProductMapper;
     }
 
     @Override
@@ -65,21 +69,26 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public CartDTO getCart(Long userId) {
-        CartDTO cartDTO = cartMapper.toDTO(getEmptyCartByUserId(userId));
+    @Transactional(readOnly = true)
+    public CartDTO getCart(Long id) {
+        CartDTO cartDTO = cartMapper.toDTO(getEmptyCartById(id));
         if(cartDTO != null)
-            return cartDTO.withProducts(findProductsFromCart(cartDTO.id()));
+            return cartDTO.withProducts(findProductsFromCart(id));
         throw new DataNotFoundException("Carro no encontrado");
     }
 
     @Override
     public void addProduct(Long cartId, Long productId) {
         CartProduct cartProduct = getCartProductByCartIdAndProductId(cartId, productId);
-        if(cartProduct == null)
-            cartProduct = new CartProduct(cartId, productId, 1L);
-        else
+        if(cartProduct == null) {
+            Optional<Product> opProduct = productRepository.findById(productId);
+            if(opProduct.isPresent())
+                cartProduct = new CartProduct(cartId, opProduct.get(), 1L);
+            else
+                throw new DataNotFoundException("Producto no encontrado");
+        } else {
             cartProduct.setQuantity(cartProduct.getQuantity() + 1L);
-
+        }
         cartProductRepository.save(cartProduct);
     }
 
@@ -96,16 +105,16 @@ public class CartService implements ICartService {
         }
     }
 
-    private Cart getEmptyCartByUserId(Long userId) {
-        if(userId == null)
+    private Cart getEmptyCartById(Long id) {
+        if(id == null)
             throw new BadRequestException("El ID es null");
-        Optional<Cart> opCart = cartRepository.findByUserId(userId);
+        Optional<Cart> opCart = cartRepository.findById(id);
         return opCart.orElse(null);
     }
 
-    private List<ProductDTO> findProductsFromCart(Long cartId) {
-        return productService.findProductsByCartId(cartId).stream()
-                .map(p -> productMapper.toDTO(p))
+    private List<CartProdutcDTO> findProductsFromCart(Long cartId) {
+        return cartProductRepository.findCartProductByCartId(cartId).stream()
+                .map(p -> cartProductMapper.toDTO(p))
                 .toList();
     }
 

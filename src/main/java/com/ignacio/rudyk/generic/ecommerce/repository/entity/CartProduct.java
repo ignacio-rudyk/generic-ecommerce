@@ -13,15 +13,16 @@ public class CartProduct {
     @Column(name = "cart_id")
     private Long cartId;
 
-    @Column(name = "product_id")
-    private Long productId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     @Column(name = "quantity")
     private Long quantity;
 
-    public CartProduct(Long cartId, Long productId, Long quantity) {
+    public CartProduct(Long cartId, Product product, Long quantity) {
         this.cartId = cartId;
-        this.productId = productId;
+        this.product = product;
         this.quantity = quantity;
     }
 
@@ -44,12 +45,12 @@ public class CartProduct {
         this.cartId = cartId;
     }
 
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Long getQuantity() {
