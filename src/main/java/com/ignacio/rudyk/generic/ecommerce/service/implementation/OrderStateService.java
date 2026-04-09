@@ -6,11 +6,11 @@ import com.ignacio.rudyk.generic.ecommerce.service.IOrderStateService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OrderStateServiceService implements IOrderStateService {
+public class OrderStateService implements IOrderStateService {
 
     private IOrderStateRepository orderStateRepository;
 
-    public OrderStateServiceService(IOrderStateRepository orderStateRepository) {
+    public OrderStateService(IOrderStateRepository orderStateRepository) {
         this.orderStateRepository = orderStateRepository;
     }
 
