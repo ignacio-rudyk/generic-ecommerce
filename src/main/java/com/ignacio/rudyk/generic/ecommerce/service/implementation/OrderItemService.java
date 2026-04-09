@@ -1,7 +1,10 @@
 package com.ignacio.rudyk.generic.ecommerce.service.implementation;
 
 import com.ignacio.rudyk.generic.ecommerce.dto.CartProdutcDTO;
+import com.ignacio.rudyk.generic.ecommerce.dto.OrderItemDTO;
 import com.ignacio.rudyk.generic.ecommerce.exception.BadRequestException;
+import com.ignacio.rudyk.generic.ecommerce.exception.DataNotFoundException;
+import com.ignacio.rudyk.generic.ecommerce.mapper.IOrderItemMapper;
 import com.ignacio.rudyk.generic.ecommerce.repository.IOrderItemRepository;
 import com.ignacio.rudyk.generic.ecommerce.repository.entity.OrderItem;
 import com.ignacio.rudyk.generic.ecommerce.service.IOrderItemService;
@@ -16,8 +19,12 @@ public class OrderItemService implements IOrderItemService {
 
     private IOrderItemRepository orderItemRepository;
 
-    public OrderItemService(IOrderItemRepository orderItemRepository) {
+    private IOrderItemMapper orderItemMapper;
+
+    public OrderItemService(IOrderItemRepository orderItemRepository,
+                            IOrderItemMapper orderItemMapper) {
         this.orderItemRepository = orderItemRepository;
+        this.orderItemMapper = orderItemMapper;
     }
 
     @Override
@@ -37,6 +44,14 @@ public class OrderItemService implements IOrderItemService {
         }
         orderItemRepository.saveAll(items);
         return items;
+    }
+
+    @Override
+    public List<OrderItemDTO> getItems(Long orderId) {
+        List<OrderItem> items = orderItemRepository.findByOrderId(orderId);
+        if(items.isEmpty())
+            throw new DataNotFoundException("Los items de la orden no se encuntran");
+        return items.stream().map(e->orderItemMapper.toDTO(e)).toList();
     }
 
     private BigDecimal calculateSubtotalItem(BigDecimal price, Long quantity) {

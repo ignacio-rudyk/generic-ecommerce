@@ -3,9 +3,10 @@ package com.ignacio.rudyk.generic.ecommerce.dto;
 import java.math.BigDecimal;
 
 public record OrderItemDTO(Long id,
-                           Long ProductId,
+                           Long productId,
+                           Long orderId,
                            String productTitle,
                            BigDecimal unitPrice,
-                           BigDecimal Subtotal,
+                           BigDecimal subtotal,
                            Long quantity) {
 }

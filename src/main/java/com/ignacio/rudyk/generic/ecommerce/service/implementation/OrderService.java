@@ -2,6 +2,8 @@ package com.ignacio.rudyk.generic.ecommerce.service.implementation;
 
 import com.ignacio.rudyk.generic.ecommerce.dto.*;
 import com.ignacio.rudyk.generic.ecommerce.enumerate.OrderStateEnum;
+import com.ignacio.rudyk.generic.ecommerce.exception.DataNotFoundException;
+import com.ignacio.rudyk.generic.ecommerce.mapper.IOrderMapper;
 import com.ignacio.rudyk.generic.ecommerce.repository.IOrderRepository;
 import com.ignacio.rudyk.generic.ecommerce.repository.entity.Order;
 import com.ignacio.rudyk.generic.ecommerce.repository.entity.OrderItem;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService implements IOrderService {
@@ -27,14 +30,18 @@ public class OrderService implements IOrderService {
 
     private IOrderStateService orderStateService;
 
+    private IOrderMapper orderMapper;
+
     public OrderService(IOrderRepository orderRepository,
                         ICartService cartService,
                         IOrderItemService orderItemService,
-                        IOrderStateService orderStateService) {
+                        IOrderStateService orderStateService,
+                        IOrderMapper orderMapper) {
         this.orderRepository = orderRepository;
         this.cartService = cartService;
         this.orderItemService = orderItemService;
         this.orderStateService = orderStateService;
+        this.orderMapper = orderMapper;
     }
 
     @Override
@@ -54,7 +61,12 @@ public class OrderService implements IOrderService {
 
     @Override
     public OrderDTO getOrder(Long orderId) {
-        return null;
+        Optional<Order> opOrder = orderRepository.findById(orderId);
+        if(opOrder.isEmpty())
+            throw new DataNotFoundException("Orden no encontrada");
+        OrderDTO order = orderMapper.toDTO(opOrder.get());
+        order = order.withItems(orderItemService.getItems(orderId));
+        return order;
     }
 
     private BigDecimal calculateTotalAmount(List<OrderItem> items) {
